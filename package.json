@@ -22,7 +22,7 @@
     "puppeteer": "^22.0.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
-    "tough-cookie": "^4.1.4",
+    "tough-cookie": "^6.0.2",
     "ws": "^8.18.0"
   }
 }
