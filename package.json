@@ -19,7 +19,7 @@
     "cycletls": "^2.0.5",
     "http-proxy-agent": "^7.0.2",
     "https-proxy-agent": "^7.0.6",
-    "puppeteer": "^22.0.0",
+    "puppeteer": "^25.12.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "tough-cookie": "^4.1.4",
