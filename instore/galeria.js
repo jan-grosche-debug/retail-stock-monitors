@@ -173,4 +173,4 @@ async function shutdownBrowser() {
   } catch (_) { /* ignore */ }
 }
 
-module.exports = { fetchEanSnapshot, shutdownBrowser };
+module.exports = { fetchEanSnapshot, shutdownBrowser, _internal: { pickStockedStores } };

@@ -112,16 +112,39 @@ async function shutdown() {
 }
 
 // Resolves the canonical PDP URL for an EAN. Rossmann's PDPs live at
+
+// Rossmann's rebuilt (Next.js) product page no longer has the data-product-id
+// attributes. The DAN still ships in the page payload as
+//   "dan":"195333","ean":"4008491105224"   (escaped inside the RSC stream).
+// Pure function so it can be unit-tested against real page snippets.
+function extractDanFromHtml(html, ean) {
+  const re = /\\?"dan\\?":\\?"(\d{4,8})\\?",\\?"ean\\?":\\?"(\d{8,14})/g;
+  let m;
+  while ((m = re.exec(String(html || '')))) {
+    if (!ean || m[2] === String(ean)) return { dan: m[1], ean: m[2] };
+  }
+  return null;
+}
+
+// Stock is a string like "0", "3" or "5+" — "5+" must count as in stock.
+function parseStock(v) {
+  const n = parseInt(String(v == null ? '' : v), 10);
+  return Number.isFinite(n) ? n : 0;
+}
+
 // /de/{slug}/p/{ean}. We don't know the slug; tries multiple strategies.
 // Critically: also verifies the loaded PDP's data-product-id2 (the EAN)
 // matches the one we asked for — Rossmann's catchall sometimes serves a
 // stale or unrelated PDP.
 async function findPdpUrl(page, ean, debug = () => {}) {
   async function pdpEan() {
-    return page.evaluate(() => {
+    const legacy = await page.evaluate(() => {
       const el = document.querySelector('[data-product-id][data-product-id2]');
       return el ? el.getAttribute('data-product-id2') : null;
-    });
+    }).catch(() => null);
+    if (legacy) return legacy;
+    const hit = extractDanFromHtml(await page.content().catch(() => ''), ean);
+    return hit ? hit.ean : null;
   }
 
   // 1. /de/p/{ean} — direct attempt
@@ -132,6 +155,8 @@ async function findPdpUrl(page, ean, debug = () => {}) {
 
   // 2. Site-search variants
   for (const searchUrl of [
+    `${BASE}/de/search/?text=${encodeURIComponent(ean)}`,
+    `${BASE}/de/search?q=${encodeURIComponent(ean)}`,
     `${BASE}/de/suche?text=${encodeURIComponent(ean)}`,
     `${BASE}/de/search?text=${encodeURIComponent(ean)}`,
     `${BASE}/de/suche/?q=${encodeURIComponent(ean)}`,
@@ -161,8 +186,8 @@ async function resolveEanMeta(page, ean, explicitUrl, logger) {
   let pdpUrl = null;
   if (explicitUrl) {
     await page.goto(explicitUrl, { waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => null);
-    const ok = await page.evaluate(() => !!document.querySelector('[data-product-id][data-product-id2]'));
-    if (ok) pdpUrl = page.url();
+    const ok = await page.evaluate(() => !!document.querySelector('[data-product-id][data-product-id2]')).catch(() => false);
+    if (ok || extractDanFromHtml(await page.content().catch(() => ''), ean)) pdpUrl = page.url();
   }
   if (!pdpUrl) pdpUrl = await findPdpUrl(page, ean, logger);
   if (!pdpUrl) return null;
@@ -178,6 +203,10 @@ async function resolveEanMeta(page, ean, explicitUrl, logger) {
     return { dan, ean, name, image };
   });
 
+  if (!meta.dan) {
+    const hit = extractDanFromHtml(await page.content().catch(() => ''), ean);
+    if (hit) meta.dan = hit.dan;
+  }
   if (!meta.dan) return null;
   const result = {
     dan: meta.dan,
@@ -231,7 +260,7 @@ function normalizeStoreEntry(s) {
     city: s.city,
     street: s.street,
     name: `ROSSMANN ${s.city || ''} ${s.street || ''}`.replace(/\s+/g, ' ').trim(),
-    stock: Number(info.stock) || 0,
+    stock: parseStock(info.stock),
     available: info.available === true
   };
 }
@@ -316,4 +345,4 @@ async function fetchEanSnapshot(entry) {
   };
 }
 
-module.exports = { fetchEanSnapshot, shutdown, _internal: { resolveEanMeta, fetchStoresForDan } };
+module.exports = { fetchEanSnapshot, shutdown, _internal: { resolveEanMeta, fetchStoresForDan, extractDanFromHtml, parseStock, normalizeStoreEntry } };
