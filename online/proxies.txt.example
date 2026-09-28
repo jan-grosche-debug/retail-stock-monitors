@@ -1,0 +1,28 @@
+# ISP- / Residential-Proxies für den Online-Monitor.
+#
+# Kopiere diese Datei nach  proxies.txt  (die echte ist gitignored) und trage
+# deine Exits ein — EINE Zeile pro Proxy. Leerzeilen und #-Zeilen werden ignoriert.
+#
+# Erkannte Formate (alle gleichwertig):
+#   host:port:user:pass            ← was Webshare/IPRoyal/Proxy-Cheap ausliefern
+#   user:pass@host:port
+#   http://user:pass@host:port
+#   host:port                      (ohne Auth, z. B. gewhitelistete IP)
+#
+# Beispiele (NICHT echt):
+# 185.199.229.156:7492:mein_user:mein_pass
+# 185.199.228.220:7300:mein_user:mein_pass
+# http://mein_user:mein_pass@2.56.119.93:5074
+#
+# Wichtig:
+#  • Es lohnt sich, MEHRERE Exits einzutragen: wird einer von Cloudflare/Imperva
+#    geflaggt, hängt der Monitor sonst. Mit Pool wandert der Host automatisch auf
+#    den nächsten gesunden Exit (10 min Cooldown für den geflaggten).
+#  • Sticky pro Host: idealo bleibt auf demselben Exit, solange der sauber ist —
+#    sonst wäre die Cloudflare-Clearance jedes Mal weg.
+#  • Nur bot-gewallte Hosts laufen über den Proxy (idealo, Geizhals, billiger,
+#    Amazon, Topps, adidas, Zalando, MediaMarkt/Saturn …). Günstige Shopify-Shops
+#    gehen direkt → sie verbrennen KEIN GB-Kontingent.
+#
+# Danach prüfen mit:
+#   node tools/proxy-check.js

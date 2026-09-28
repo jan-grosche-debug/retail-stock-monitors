@@ -1,0 +1,44 @@
+{
+  "discord": {
+    "_comment": "Delivery is EITHER a webhook URL (simplest, no bot) OR a bot token + target. webhookUrl wins if both are set.",
+    "webhookUrl": "https://discord.com/api/webhooks/XXXXXXXX/XXXXXXXXXXXX",
+    "username": "Online Monitor",
+    "_botAlt": "To use a bot instead of a webhook: remove webhookUrl and set botToken + target. Bot needs View Channel + Send Messages + Embed Links.",
+    "botToken": "PUT-DISCORD-BOT-TOKEN-HERE",
+    "target": {
+      "kind": "channel",
+      "channelId": "PUT-CHANNEL-ID-HERE"
+    }
+  },
+  "defaults": {
+    "_comment": "Applied to every watch unless the watch overrides the same key.",
+    "pollMinutes": 10,
+    "errorBackoffMinutes": 15,
+    "alertOnFirstSeenAvailable": true,
+    "reAlertCooldownMinutes": 180,
+    "_priceDrop": "Set trackPriceDrops:true on a watch (or here) to also alert on price drops.",
+    "trackPriceDrops": false,
+    "minDropPercent": 20,
+    "reAlertStepPercent": 5,
+    "baselineMode": "recentMax",
+    "historyWindow": 50,
+    "minBaselineSamples": 1
+  },
+  "watches": [
+    {
+      "_site": "Generic Shopify — by EAN (resolved via the shop's predictive search) ...",
+      "id": "shopify-by-ean-example",
+      "site": "shopify",
+      "domain": "tradingtoys.de",
+      "ean": "0196214140189",
+      "enabled": false
+    },
+    {
+      "_site": "Generic Shopify — by product url/handle (most reliable; EAN lookup depends on the shop indexing barcodes).",
+      "id": "shopify-by-url-example",
+      "site": "shopify",
+      "url": "https://tradingtoys.de/products/some-handle",
+      "enabled": false
+    }
+  ]
+}

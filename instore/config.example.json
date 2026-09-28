@@ -1,0 +1,24 @@
+{
+  "discord": {
+    "botToken": "PASTE-YOUR-DISCORD-BOT-TOKEN-HERE",
+    "target": {
+      "kind": "userDm",
+      "userId": "YOUR-DISCORD-USER-ID"
+    },
+    "username": "Galeria Instore Monitor"
+  },
+  "schedule": {
+    "pollIntervalMs": 600000,
+    "forceRefreshMs": 3600000
+  },
+  "galeria": {
+    "regionFlag": "🇩🇪",
+    "eans": [
+      {
+        "ean": "0196214131651",
+        "label": "POKÉMON 13165 ME02.5 Erhabene Helden Boosterbundle",
+        "productUrl": "https://www.galeria.de/p/<optional-direct-product-url>"
+      }
+    ]
+  }
+}

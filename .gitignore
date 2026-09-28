@@ -1,0 +1,11 @@
+# Secrets & runtime state — never commit
+config.json
+state.json
+proxies.txt
+*-cache.json
+smyths-cookies.json
+smyths-discovered.json
+site-status.jsonl
+SITE-STATUS.md
+*.log
+node_modules/
