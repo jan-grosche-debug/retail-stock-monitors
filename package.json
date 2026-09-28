@@ -18,7 +18,7 @@
     "axios-cookiejar-support": "^5.0.5",
     "cycletls": "^2.0.5",
     "http-proxy-agent": "^7.0.2",
-    "https-proxy-agent": "^7.0.6",
+    "https-proxy-agent": "^9.1.0",
     "puppeteer": "^22.0.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
