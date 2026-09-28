@@ -1,5 +1,7 @@
 # Retail Stock Monitors
 
+[![tests](https://github.com/jan-grosche-debug/retail-stock-monitors/actions/workflows/test.yml/badge.svg)](https://github.com/jan-grosche-debug/retail-stock-monitors/actions/workflows/test.yml)
+
 Stock monitors for German retail, built for the trading-card and collectibles reselling scene. They watch **in-store availability** at physical chains and **online restocks** at Shopify shops, and post Discord alerts only when something actually changes. They ran 24/7 on a Linux VPS for a private Discord community.
 
 ## In-store monitors (`instore/`)
@@ -11,6 +13,14 @@ Physical-store stock by EAN, for every branch in a region:
 | **Galeria** | Calls the store-finder availability endpoint with a Chrome-like TLS fingerprint (cycletls). A headless-browser fallback is included. |
 | **Rossmann** | Resolves the EAN to Rossmann's internal article number in a stealth browser, then queries the store finder per postcode region. |
 | **Smyths Toys** | Resolves the EAN to a product ID and reads the per-store stock counts from the store API. It can also discover new Pokémon products automatically. |
+
+**Status (checked 2026-09-28):**
+
+| Chain | Status |
+|---|---|
+| Galeria | ✅ The store-finder API and response format are unchanged (e.g. 14 of 83 stores stocked for a test EAN). A dependency-version bug that caused empty responses is fixed. |
+| Rossmann | ✅ Adapted to Rossmann's rebuilt product pages. The article number (DAN) is now read from the page payload, and stock values like `5+` are handled. The store API was verified live. |
+| Smyths Toys | ⚠️ The store API is behind an Imperva check. It needs a session cookie from a real browser (`smyths-cookies.json`) and a Smyths product ID per item. |
 
 - **Smart scheduling:** items in stock are re-checked every 20 minutes, sold-out items every 12 hours. After fetch errors the monitor backs off exponentially.
 - **No spam:** an alert is only sent when the *set of stocked stores* changes. This is detected with a hash per EAN and platform.
