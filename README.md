@@ -1,5 +1,7 @@
 # Retail Stock Monitors
 
+[![tests](https://github.com/jan-grosche-debug/retail-stock-monitors/actions/workflows/test.yml/badge.svg)](https://github.com/jan-grosche-debug/retail-stock-monitors/actions/workflows/test.yml)
+
 Stock monitors for German retail, built for the trading-card and collectibles reselling scene. They watch **in-store availability** at physical chains and **online restocks** at Shopify shops, and post Discord alerts only when something actually changes. They ran 24/7 on a Linux VPS for a private Discord community.
 
 ## In-store monitors (`instore/`)
